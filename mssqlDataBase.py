@@ -88,7 +88,7 @@ class MsSql:
                     for sql_item in sql_lst:
                         sql_path = os.path.join(path_item, sql_item).lower()
                         log_path = os.path.join(os.path.dirname(__file__)
-                                                + '/runLog', self.log_file)
+                                                + '/executeLog', self.log_file)
                         with open(log_path, 'r') as f:
                             lines = map(lambda line: line.strip('\n'), f)
                             if sql_path in lines:
