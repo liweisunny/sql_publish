@@ -32,7 +32,7 @@ def getSqlPathLst(parent_path, path_lst=[], temp_lst=[]):
     return path_lst
 
 
-def checkSqlInfo(sql_path):
+def checkSqlInfo(sql_dir):
     '''
      校验脚本是否合法
      步骤：
@@ -43,13 +43,13 @@ def checkSqlInfo(sql_path):
      5.检查是否只存在一个操作（create、alter）存储过程的逻辑；
      6.检查是否只存在一个操作（create、alter、drop）表的逻辑
     '''
-    sql_lst = [file for file in os.listdir(sql_path) if file.endswith('.sql')]
+    sql_lst = [file for file in os.listdir(sql_dir) if file.endswith('.sql')]
     check_result = True
     fail_count = 0
     print("Path '{path}' begins to review,total:"
-          "{num} a scripts!!".format(path=sql_path, num=len(sql_lst)))
+          "{num} a scripts!!".format(path=sql_dir, num=len(sql_lst)))
     for sql_item in sql_lst:
-        sql_path = os.path.join(sql_path, sql_item)
+        sql_path = os.path.join(sql_dir, sql_item)
         sql_info_lst = getSqlInfo(sql_path)
         error_msg = []
         # 脚本命名校验
@@ -69,11 +69,11 @@ def checkSqlInfo(sql_path):
     if check_result:
         print("All scripts under path "
               "'{path}' are approved and will "
-              "be executed.!!".format(path=sql_path, num=fail_count))
+              "be executed.!!".format(path=sql_dir, num=fail_count))
     else:
         print("Path: '{path}' the script "
               "audit ends, total: {num} "
-              "a failure.!!".format(path=sql_path, num=fail_count))
+              "a failure.!!".format(path=sql_dir, num=fail_count))
     return check_result
 
 
