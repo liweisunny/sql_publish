@@ -78,8 +78,8 @@ class MsSql:
 
     def execSqlScripts(self, sql_path):
         ''' 检查并执行脚本文件'''
-        sql_paths = getSqlPathLst(sql_path)
-        for path_item in sql_paths:
+        sql_pathlst = getSqlPathLst(sql_path)
+        for path_item in sql_pathlst:
             check_result = checkSqlInfo(path_item)
             if check_result:
                 if self.server_mark != 'check':
@@ -88,15 +88,15 @@ class MsSql:
                     for sql_item in sql_lst:
                         sql_path = os.path.join(path_item, sql_item).lower()
                         log_path = os.path.join(os.path.dirname(__file__)
-                                                + '\executeLog', self.log_file)
+                                                + '/runLog', self.log_file)
                         with open(log_path, 'r') as f:
                             lines = map(lambda line: line.strip('\n'), f)
-                            if sql_path in lines and sql_item[0:2] in ['3_', '3-']:  # 修复数据的脚本只能执行一次
-                                continue
+                            if sql_path in lines:
+                                break
                         with open(log_path, 'a') as f:
-                            cmd = r"sqlcmd -S " + self.host + " -U " \
+                            cmd = r"sqlcmd -S " + self.host + " -U "\
                                   + self.user + " -P " + self.pwd + " -d " \
-                                  + self.db + " -i " + sql_path + ' -b '
+                                  + self.db + " -i " + sql_path+' -b '
                             exec_result = os.system(cmd)  # 0表示成功，1表示失败
                             if not exec_result:
                                 f.write(sql_path + '\n')

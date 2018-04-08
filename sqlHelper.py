@@ -32,28 +32,25 @@ def getSqlPathLst(parent_path, path_lst=[], temp_lst=[]):
     return path_lst
 
 
-def checkSqlInfo(sql_dir):
+def checkSqlInfo(sql_paths):
     '''
      校验脚本是否合法
      步骤：
      1.读取文件内容，转码为utf-8格式；
-     2.校验脚本命名是否规范：1表示修改表结构，2表示修改存储过程，3表示修复数据
-     3.校验脚本前四行是否存在use语句；
-     4.检查是否写死库名；
-     5.检查是否只存在一个操作（create、alter）存储过程的逻辑；
-     6.检查是否只存在一个操作（create、alter、drop）表的逻辑
+     2.校验脚本前四行是否存在use语句；
+     3.检查是否写死库名；
+     4.检查是否只存在一个操作（create、alter）存储过程的逻辑；
+     5.检查是否只存在一个操作（create、alter、drop）表的逻辑
     '''
-    sql_lst = [file for file in os.listdir(sql_dir) if file.endswith('.sql')]
+    sql_lst = [file for file in os.listdir(sql_paths) if file.endswith('.sql')]
     check_result = True
     fail_count = 0
     print("Path '{path}' begins to review,total:"
-          "{num} a scripts!!".format(path=sql_dir, num=len(sql_lst)))
-    for sql_item in sql_lst:
-        sql_path = os.path.join(sql_dir, sql_item)
+          "{num} a scripts!!".format(path=sql_paths, num=len(sql_lst)))
+    for sql_file in sql_lst:
+        sql_path = os.path.join(sql_paths, sql_file)
         sql_info_lst = getSqlInfo(sql_path)
         error_msg = []
-        # 脚本命名校验
-        checkSqlName(sql_item, error_msg)
         # 脚本内容校验
         db_name = checkUse(sql_info_lst, error_msg)
         checkDbName(sql_info_lst, db_name, error_msg)
@@ -63,17 +60,17 @@ def checkSqlInfo(sql_dir):
             check_result = False
             fail_count += 1
             print("The '{sql_name}'check failed, the "
-                  "details are as follows:".format(sql_name=sql_item))
+                  "details are as follows:".format(sql_name=sql_file))
             for i, msg in enumerate(error_msg, 1):
                 print('{num}.{msg}'.format(num=i, msg=msg))
     if check_result:
         print("All scripts under path "
               "'{path}' are approved and will "
-              "be executed.!!".format(path=sql_dir, num=fail_count))
+              "be executed.!!".format(path=sql_paths, num=fail_count))
     else:
         print("Path: '{path}' the script "
               "audit ends, total: {num} "
-              "a failure.!!".format(path=sql_dir, num=fail_count))
+              "a failure.!!".format(path=sql_paths, num=fail_count))
     return check_result
 
 
@@ -95,15 +92,6 @@ def getSqlInfo(sql_path):
         else:
             sql_lst = sql_info.split('\n')
     return sql_lst
-
-
-def checkSqlName(sql_file, error_msg):
-    '''校验脚本名称是否规范'''
-    pattern_sql = r"^[1-3](_|-)"
-    result = re.match(pattern_sql, sql_file, re.I)
-    if not result:
-        error_msg.append("The SQL file '{sql_name}' is not specified.".format(sql_name=sql_file))
-
 
 
 def checkUse(sql_arry, error_msg):
