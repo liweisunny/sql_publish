@@ -5,7 +5,7 @@ import os
 import chardet
 import re
 
-
+db_name=''
 def getSqlPathLst(parent_path, path_lst=[], temp_lst=[]):
 
     ''' 获取当前目录下的所以包含脚本文件的子目录'''
@@ -32,15 +32,36 @@ def getSqlPathLst(parent_path, path_lst=[], temp_lst=[]):
     return path_lst
 
 
+def getSqlInfo(sql_path):
+    ''' 读取脚本内容，并以列表的形式返回'''
+    with open(sql_path, 'rb')as f:
+        sql_content = f.read()
+        # 转码逻辑
+        code_style = chardet.detect(sql_content).get('encoding')
+        f.seek(0, os.SEEK_SET)
+        if code_style == 'UTF-16LE':
+            sql_content = sql_content.decode('utf16', 'ignore').encode('utf8')
+        else:
+            sql_content = sql_content.decode(code_style).encode('utf8')
+        # 处理换行符
+        sql_info = str(sql_content, encoding='utf-8')
+        if '\r\n' in sql_info:
+            sql_lst = sql_info.split('\r\n')
+        else:
+            sql_lst = sql_info.split('\n')
+    return sql_lst
+
+
 def checkSqlInfo(sql_paths):
     '''
      校验脚本是否合法
      步骤：
      1.读取文件内容，转码为utf-8格式；
      2.校验脚本前四行是否存在use语句；
-     3.检查是否写死库名；
-     4.检查是否只存在一个操作（create、alter）存储过程的逻辑；
-     5.检查是否只存在一个操作（create、alter、drop）表的逻辑
+     3.校验脚本是否可重复执行；
+     4.检查是否写死库名；
+     5.检查是否只存在一个操作（create、alter）存储过程的逻辑；
+     6.检查是否只存在一个操作（create、alter、drop）表的逻辑
     '''
     sql_lst = [file for file in os.listdir(sql_paths) if file.endswith('.sql')]
     check_result = True
@@ -52,7 +73,8 @@ def checkSqlInfo(sql_paths):
         sql_info_lst = getSqlInfo(sql_path)
         error_msg = []
         # 脚本内容校验
-        db_name = checkUse(sql_info_lst, error_msg)
+        checkUse(sql_info_lst, error_msg)
+        checkRepeat(sql_info_lst, error_msg)
         checkDbName(sql_info_lst, db_name, error_msg)
         checkProc(sql_info_lst,  error_msg)
         checkTable(sql_info_lst, error_msg)
@@ -74,47 +96,60 @@ def checkSqlInfo(sql_paths):
     return check_result
 
 
-def getSqlInfo(sql_path):
-    ''' 读取脚本内容，并以列表的形式返回'''
-    with open(sql_path, 'rb')as f:
-        sql_content = f.read()
-        # 转码逻辑
-        code_style = chardet.detect(sql_content).get('encoding')
-        f.seek(0, os.SEEK_SET)
-        if code_style == 'UTF-16LE':
-            sql_content = sql_content.decode('utf16', 'ignore').encode('utf8')
-        else:
-            sql_content = sql_content.decode(code_style).encode('utf8')
-        # 处理换行符
-        sql_info = str(sql_content, encoding='utf-8')
-        if '\r\n' in sql_info:
-            sql_lst = sql_info.split('\r\n')
-        else:
-            sql_lst = sql_info.split('\n')
-    return sql_lst
-
-
-def checkUse(sql_arry, error_msg):
+def checkUse(sql_info_lst, error_msg):
+    global db_name
 
     ''' 校验脚本前四行是否存在use语句 '''
     pattern_use = r"\s*use\s+.*"
-    if len(sql_arry) >= 4:
-        sql_arry = sql_arry[0:5]
+    if len(sql_info_lst) >= 4:
+        sql_arry = sql_info_lst[0:5]
 
     # 检查脚本前4行是否有use库名
     for sql_info in sql_arry:
         use_db = re.match(pattern_use, sql_info, re.I)
         if use_db:
-            db_name = use_db.group().split()[1]\
-                .replace('[', '').replace(']', '')
-            return db_name
+            if db_name:
+                if db_name != use_db.group().split()[1]\
+                        .replace('[', '').replace(']', ''):
+                    error_msg.append("database name error.!!")
+                    return
+            else:
+                db_name = use_db.group().split()[1]\
+                    .replace('[', '').replace(']', '')
+                if db_name:
+                    return db_name
         error_msg.append('The first four lines have no use statements.!!')
 
 
-def checkDbName(sql_arry, db_name, error_msg):
+def checkRepeat(sql_info_lst, error_msg):
+    pattern_create_procedure = r'\s*create\s+(procedure|proc)\s+.*'
+    pattern_drop_procedure = r'\s*drop\s+(procedure|proc)\s+.*'
+    pattern_create_table = r'\s*create\s+table\s+.*'
+    pattern_drop_table = r'\s*drop\s+table\s+.*'
+    pattern_create_column = r'\s*create\s+column\s+.*'
+    pattern_drop_column = r'\s*drop\s+column\s+.*'
+    pattern_create_type = r'\s*create\s+type\s+.*'
+    pattern_drop_type = r'\s*drop\s+type\s+.*'
+    sql_info = ''.join(sql_info_lst)
+    msg = "The script does not support repeated execution, please modify.!!"
+    if re.match(pattern_create_procedure, sql_info, re.I) and not re.match(pattern_drop_procedure, sql_info, re.I):
+        error_msg.append(msg)
+        return
+    if re.match(pattern_create_table, sql_info, re.I) and not re.match(pattern_drop_table, sql_info, re.I):
+        error_msg.append(msg)
+        return
+    if re.match(pattern_create_column, sql_info, re.I) and not re.match(pattern_drop_column, sql_info, re.I):
+        error_msg.append(msg)
+        return
+    if re.match(pattern_create_type, sql_info, re.I) and not re.match(pattern_drop_type, sql_info, re.I):
+        error_msg.append(msg)
+        return
+
+
+def checkDbName(sql_info_lst, error_msg):
     db_name_lines = []
     ''' 校验脚本是否写死库名 '''
-    for i, sql_info in enumerate(sql_arry, 1):
+    for i, sql_info in enumerate(sql_info_lst, 1):
         if re.match(r".*%s.*" % db_name, sql_info, re.I):
             db_name_lines.append(i)
     if len(db_name_lines) > 1:
@@ -123,7 +158,7 @@ def checkDbName(sql_arry, db_name, error_msg):
                          "At line {lines}!!".format(lines=db_name_lines))
 
 
-def checkProc(sql_arry, error_msg):
+def checkProc(sql_info_lst, error_msg):
 
     '''检查是否只存在一个操作（create、alter）存储过程的逻辑'''
     pattern_create_procedure = r'\s*create\s+(procedure|proc)\s+.*'
@@ -131,7 +166,7 @@ def checkProc(sql_arry, error_msg):
     proc_create_num = 0
     proc_alter_num = 0
     proc_name = []
-    for i, sql_info in enumerate(sql_arry, 1):
+    for i, sql_info in enumerate(sql_info_lst, 1):
         create_proc_re = re.match(pattern_create_procedure, sql_info, re.I)
         if create_proc_re:
             proc_create_num += 1
@@ -151,7 +186,7 @@ def checkProc(sql_arry, error_msg):
                          "not the same stored procedure.")
 
 
-def checkTable(sql_arry, error_msg):
+def checkTable(sql_info_lst, error_msg):
 
     ''' 检查是否只存在一个操作（create、alter、drop）表的逻辑'''
     pattern_create_table = r'\s*create\s+table\s+.*'
@@ -163,7 +198,7 @@ def checkTable(sql_arry, error_msg):
     create_table_num = 0
     drop_table_num = 0
     alter_table_num = 0
-    for sql_info in sql_arry:
+    for sql_info in sql_info_lst:
         # 创建表的逻辑审核
         create_table_re = re.match(pattern_create_table, sql_info, re.I)
         if create_table_re:

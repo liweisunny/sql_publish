@@ -85,6 +85,7 @@ class MsSql:
                 if self.server_mark != 'check':
                     sql_lst = [file for file in
                                os.listdir(path_item) if file.endswith('.sql')]
+                    print(sql_lst)
                     for sql_item in sql_lst:
                         sql_path = os.path.join(path_item, sql_item).lower()
                         log_path = os.path.join(os.path.dirname(__file__)
@@ -92,7 +93,7 @@ class MsSql:
                         with open(log_path, 'r') as f:
                             lines = map(lambda line: line.strip('\n'), f)
                             if sql_path in lines:
-                                break
+                                continue
                         with open(log_path, 'a') as f:
                             cmd = r"sqlcmd -S " + self.host + " -U "\
                                   + self.user + " -P " + self.pwd + " -d " \
@@ -109,6 +110,8 @@ class MsSql:
 
 
 if __name__ == '__main__':
-    ms = MsSql('innerDev')
-    path = r'D:\OceanWork\Api'
-    ms.execSqlScripts(path)
+    ms = MsSql('test')
+    ms.execNonQuery('''UPDATE dbo.AnalysisReportChart SET ShowRows=4 WHERE AnalysisReportChartId IN(
+SELECT AnalysisReportChartId FROM dbo.AnalysisReportChart WHERE AnalysisReportId IN (
+SELECT AnalysisReportId FROM dbo.DashboardDetail WHERE DashboardId='7D188AAB-26B2-4D4D-8C42-A4E7178976AD')
+)''')
