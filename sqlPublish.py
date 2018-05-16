@@ -6,13 +6,13 @@ import sys
 from mssqlDataBase import MsSql
 
 # 该路径是10.129.10.169上的脚本文件存放路径
-root_path =r'D:\\OceanWork\\Files\\DBScript\\Ocean\\' # r'D:\WorkSpace\DBScript\DBScript\Ocean'
+root_path = r'D:\WorkSpace\DBScript\DBScript\Ocean'
 
 
 def main():
     ''' 主函数'''
     try:
-        args = ['D:\\Nuget\\BuildScripts\\sql_publish\\sqlPublish.py', '20180224', 'Build', 'For', 'check']
+        args = sys.argv  # ['D:\\Nuget\\BuildScripts\\sql_publish\\sqlPublish.py', '20180224', 'Build', 'For', 'check']
         print('The program starts running and gets the '
               'input parameters of the user:{args}\n'.format(args=args))
         if len(args) == 5:
