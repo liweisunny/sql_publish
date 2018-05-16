@@ -6,7 +6,7 @@ import pymssql
 import os
 import traceback
 import configparser
-from sqlHelper import getSqlPathLst, checkSqlInfo
+from sqlHelper import get_sql_paths, check_sql_info
 
 
 class MsSql:
@@ -21,10 +21,13 @@ class MsSql:
     def __init__(self, server_mark):
         self.server_mark = server_mark
         self.log_file = server_mark
-        self.__initDbInfo()
+        self.__init_db_info()
 
-    def __initDbInfo(self):
-        '''加载配置文件，初始化数据库信息'''
+    def __init_db_info(self):
+        '''
+        加载配置文件，初始化数据库信息
+        :return:
+        '''
         config_path = os.path.join(os.path.dirname(__file__),
                                    'config/dbConfig.config')
         cf = configparser.ConfigParser()
@@ -34,37 +37,37 @@ class MsSql:
         self.user = cf.get(self.server_mark, 'db_user')
         self.pwd = cf.get(self.server_mark, 'db_pwd')
 
-    def __getConnect(self):
+    def __get_connect(self):
 
-        ''' 构造数据库链接 '''
+        '''构造数据库链接'''
         self.conn = pymssql.connect(host=self.host, user=self.user,
                                     password=self.pwd, database=self.db,
                                     charset="utf8")
         cur = self.conn.cursor()
         return cur
 
-    def execQuery(self, sql):
+    def exec_query(self, sql):
 
         ''' 执行sql语句并返回查询结果'''
         try:
-            cur = self.__getConnect()
+            cur = self.__get_connect()
             cur.execute(sql)
             self.conn.commit()
             cur.nextset()  # 要加上这句才能通过fetch函数取到值
-            resList = cur.fetchone()
+            res_list = cur.fetchone()
             self.conn.close()
-            return resList
+            return res_list
         except Exception as e:
             print(e)
             traceback.print_exc()
         finally:
             self.conn.close()
 
-    def execNonQuery(self, sql):
+    def exec_non_query(self, sql):
 
         ''' 执行sql语句(insert、updte、delete)'''
         try:
-            cur = self.__getConnect()
+            cur = self.__get_connect()
             cur.execute(sql)
             self.conn.commit()
             self.conn.close()
@@ -76,23 +79,23 @@ class MsSql:
         finally:
             self.conn.close()
 
-    def execSqlScripts(self, sql_path):
+    def exec_sql_file(self, sql_path):
+
         ''' 检查并执行脚本文件'''
-        sql_pathlst = getSqlPathLst(sql_path)
-        for path_item in sql_pathlst:
-            check_result = checkSqlInfo(path_item)
-            if check_result:
+        sql_path_lst = get_sql_paths(sql_path)
+        for path_item in sql_path_lst:
+            check_result = check_sql_info(path_item)
+            if check_result:  # 当前路径下的脚本全部校验成功后开始执行脚本
                 if self.server_mark != 'check':
                     sql_lst = [file for file in
                                os.listdir(path_item) if file.endswith('.sql')]
-                    print(sql_lst)
                     for sql_item in sql_lst:
                         sql_path = os.path.join(path_item, sql_item).lower()
                         log_path = os.path.join(os.path.dirname(__file__)
                                                 + '/executeLog', self.log_file)
                         with open(log_path, 'r') as f:
                             lines = map(lambda line: line.strip('\n'), f)
-                            if sql_path in lines:
+                            if sql_path in lines:  # 当前脚本执行成功过不在执行
                                 continue
                         with open(log_path, 'a') as f:
                             cmd = r"sqlcmd -S " + self.host + " -U "\
@@ -100,10 +103,10 @@ class MsSql:
                                   + self.db + " -i " + sql_path+' -b '
                             exec_result = os.system(cmd)  # 0表示成功，1表示失败
                             if not exec_result:
-                                f.write(sql_path + '\n')
+                                f.write(sql_path + '\n')  # 脚本执行成功记录日志
                             else:
                                 raise SystemError("'{sql}On failure'"
-                                                  "".format(sql=sql_path))
+                                                  "".format(sql=sql_path))  # 脚本执行失败抛出异常
             else:
                 raise ValueError("The script for path '{path}'"
                                  " does not pass.".format(path=path_item))
@@ -111,7 +114,7 @@ class MsSql:
 
 if __name__ == '__main__':
     ms = MsSql('test')
-    ms.execNonQuery('''UPDATE dbo.AnalysisReportChart SET ShowRows=4 WHERE AnalysisReportChartId IN(
+    ms.exec_non_query('''UPDATE dbo.AnalysisReportChart SET ShowRows=4 WHERE AnalysisReportChartId IN(
 SELECT AnalysisReportChartId FROM dbo.AnalysisReportChart WHERE AnalysisReportId IN (
 SELECT AnalysisReportId FROM dbo.DashboardDetail WHERE DashboardId='7D188AAB-26B2-4D4D-8C42-A4E7178976AD')
 )''')

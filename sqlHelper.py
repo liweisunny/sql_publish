@@ -4,25 +4,30 @@
 import os
 import chardet
 import re
+import copy
 
-db_name=''
-def getSqlPathLst(parent_path, path_lst=[], temp_lst=[]):
+db_name = ''
+excute_path = ['v2', 'dw', 'dwlog']  # 按目前规约只执行这三个目录下及其子目录下的脚本
+
+
+def get_sql_paths(parent_path, path_lst=[], temp_lst=[]):
 
     ''' 获取当前目录下的所以包含脚本文件的子目录'''
+    global excute_path
     if not os.path.exists(parent_path):
         raise ValueError("Path:'{path}'does not "
                          "exist!!".format(path=parent_path))
     son_paths = [path for path in os.listdir(parent_path) if
                  os.path.isdir(os.path.join(parent_path, path))
-                 and path != '.git']  # 获取所有一级子目录
-
+                 and (path.lower() in excute_path or not excute_path)]
     for path_item in son_paths:
         path = os.path.join(parent_path, path_item)
         files = [file for file in os.listdir(path) if file.endswith('.sql')]
         if not files:  # 判断当前目录下是否直接包含脚本文件
             temp_lst.append(path)
         path_lst.append(path)
-        getSqlPathLst(path, path_lst, temp_lst)
+        excute_path = []
+        get_sql_paths(path, path_lst, temp_lst)
 
     path_lst = [item for item in path_lst
                 if item not in temp_lst]  # 去除掉不包含脚本文件的目录
@@ -32,7 +37,7 @@ def getSqlPathLst(parent_path, path_lst=[], temp_lst=[]):
     return path_lst
 
 
-def getSqlInfo(sql_path):
+def get_sql_info(sql_path):
     ''' 读取脚本内容，并以列表的形式返回'''
     with open(sql_path, 'rb')as f:
         sql_content = f.read()
@@ -52,85 +57,87 @@ def getSqlInfo(sql_path):
     return sql_lst
 
 
-def checkSqlInfo(sql_paths):
+def check_sql_info(sql_paths):
     '''
      校验脚本是否合法
      步骤：
      1.读取文件内容，转码为utf-8格式；
-     2.校验脚本前四行是否存在use语句；
+     2.检查脚本前4行是否有use库名以及当前目录下的脚本是否都是一个数据库下的 ；
      3.校验脚本是否可重复执行；
      4.检查是否写死库名；
      5.检查是否只存在一个操作（create、alter）存储过程的逻辑；
      6.检查是否只存在一个操作（create、alter、drop）表的逻辑
     '''
+    global db_name
+    db_name = ''
     sql_lst = [file for file in os.listdir(sql_paths) if file.endswith('.sql')]
     check_result = True
     fail_count = 0
     print("Path '{path}' begins to review,total:"
-          "{num} a scripts!!".format(path=sql_paths, num=len(sql_lst)))
+          "{num}  scripts!!\n".format(path=sql_paths, num=len(sql_lst)))
     for sql_file in sql_lst:
         sql_path = os.path.join(sql_paths, sql_file)
-        sql_info_lst = getSqlInfo(sql_path)
+        sql_info_lst = get_sql_info(sql_path)
         error_msg = []
         # 脚本内容校验
-        checkUse(sql_info_lst, error_msg)
-        checkRepeat(sql_info_lst, error_msg)
-        checkDbName(sql_info_lst, db_name, error_msg)
-        checkProc(sql_info_lst,  error_msg)
-        checkTable(sql_info_lst, error_msg)
+        check_use(sql_info_lst, error_msg)
+        check_repeat(sql_info_lst, error_msg)
+        check_db_name(sql_info_lst, error_msg)
+        check_procedure(sql_info_lst,  error_msg)
+        check_table(sql_info_lst, error_msg)
         if error_msg:
             check_result = False
             fail_count += 1
             print("The '{sql_name}'check failed, the "
-                  "details are as follows:".format(sql_name=sql_file))
+                  "details are as follows:\n".format(sql_name=sql_file))
             for i, msg in enumerate(error_msg, 1):
-                print('{num}.{msg}'.format(num=i, msg=msg))
+                print('   {num}.{msg}\n'.format(num=i, msg=msg))
+            print('---------------------------------------------\n')
     if check_result:
         print("All scripts under path "
               "'{path}' are approved and will "
-              "be executed.!!".format(path=sql_paths, num=fail_count))
+              "be executed.!!\n".format(path=sql_paths, num=fail_count))
     else:
         print("Path: '{path}' the script "
               "audit ends, total: {num} "
-              "a failure.!!".format(path=sql_paths, num=fail_count))
+              "a failure.!!\n".format(path=sql_paths, num=fail_count))
     return check_result
 
 
-def checkUse(sql_info_lst, error_msg):
-    global db_name
+def check_use(sql_info_lst, error_msg):
+    ''' 检查脚本前4行是否有use库名以及当前目录下的脚本是否都是一个数据库下的 '''
 
-    ''' 校验脚本前四行是否存在use语句 '''
+    global db_name
     pattern_use = r"\s*use\s+.*"
     if len(sql_info_lst) >= 4:
-        sql_arry = sql_info_lst[0:5]
-
-    # 检查脚本前4行是否有use库名
-    for sql_info in sql_arry:
+        sql_info_lst = sql_info_lst[0:5]
+    for sql_info in sql_info_lst:
         use_db = re.match(pattern_use, sql_info, re.I)
         if use_db:
+            new_db_name = use_db.group().split()[1] \
+                .replace('[', '').replace(']', '').replace(';', '').replace(' ', '')
             if db_name:
-                if db_name != use_db.group().split()[1]\
-                        .replace('[', '').replace(']', ''):
+                if db_name != new_db_name:
                     error_msg.append("database name error.!!")
-                    return
+                return
             else:
-                db_name = use_db.group().split()[1]\
-                    .replace('[', '').replace(']', '')
+                db_name = new_db_name
                 if db_name:
-                    return db_name
-        error_msg.append('The first four lines have no use statements.!!')
+                    return
+    error_msg.append('The first four lines have no use statements.!!')
 
 
-def checkRepeat(sql_info_lst, error_msg):
-    pattern_create_procedure = r'\s*create\s+(procedure|proc)\s+.*'
-    pattern_drop_procedure = r'\s*drop\s+(procedure|proc)\s+.*'
-    pattern_create_table = r'\s*create\s+table\s+.*'
-    pattern_drop_table = r'\s*drop\s+table\s+.*'
-    pattern_create_column = r'\s*create\s+column\s+.*'
-    pattern_drop_column = r'\s*drop\s+column\s+.*'
-    pattern_create_type = r'\s*create\s+type\s+.*'
-    pattern_drop_type = r'\s*drop\s+type\s+.*'
-    sql_info = ''.join(sql_info_lst)
+def check_repeat(sql_info_lst, error_msg):
+    pattern_create_procedure = r'[\s\S]*create\s+(procedure|proc)\s+[\s\S]*'
+    pattern_drop_procedure = r'[\s\S]*drop\s+(procedure|proc)\s+[\s\S]*'
+    pattern_create_table = r'[\s\S]*create\s+table\s+[\s\S]*'
+    pattern_drop_table = r'[\s\S]*drop\s+table\s+[\s\S]*'
+    pattern_create_column = r'[\s\S]*add\s+column\s+[\s\S]*'
+    pattern_drop_column = r'[\s\S]*drop\s+column\s+[\s\S]*'
+    pattern_create_type = r'[\s\S]*create\s+type\s+[\s\S]*'
+    pattern_drop_type = r'[\s\S]*drop\s+type\s+[\s\S]*'
+    sql_info = ' '.join(sql_info_lst)
+
     msg = "The script does not support repeated execution, please modify.!!"
     if re.match(pattern_create_procedure, sql_info, re.I) and not re.match(pattern_drop_procedure, sql_info, re.I):
         error_msg.append(msg)
@@ -146,7 +153,7 @@ def checkRepeat(sql_info_lst, error_msg):
         return
 
 
-def checkDbName(sql_info_lst, error_msg):
+def check_db_name(sql_info_lst, error_msg):
     db_name_lines = []
     ''' 校验脚本是否写死库名 '''
     for i, sql_info in enumerate(sql_info_lst, 1):
@@ -158,35 +165,35 @@ def checkDbName(sql_info_lst, error_msg):
                          "At line {lines}!!".format(lines=db_name_lines))
 
 
-def checkProc(sql_info_lst, error_msg):
+def check_procedure(sql_info_lst, error_msg):
 
     '''检查是否只存在一个操作（create、alter）存储过程的逻辑'''
     pattern_create_procedure = r'\s*create\s+(procedure|proc)\s+.*'
     pattern_alter_procedure = r'\s*alter\s+(procedure|proc)\s+.*'
-    proc_create_num = 0
-    proc_alter_num = 0
-    proc_name = []
+    procedure_create_num = 0
+    procedure_alter_num = 0
+    procedure_name = []
     for i, sql_info in enumerate(sql_info_lst, 1):
-        create_proc_re = re.match(pattern_create_procedure, sql_info, re.I)
-        if create_proc_re:
-            proc_create_num += 1
-            proc_name.append(create_proc_re.group().split()[2])
+        create_procedure_re = re.match(pattern_create_procedure, sql_info, re.I)
+        if create_procedure_re:
+            procedure_create_num += 1
+            procedure_name.append(create_procedure_re.group().split()[2])
 
-        alert_proc_re = re.match(pattern_alter_procedure, sql_info, re.I)
-        if alert_proc_re:
-            proc_alter_num += 1
-            proc_name.append(alert_proc_re.group().split()[2])
-    if proc_create_num >= 2:
+        alert_procedure_re = re.match(pattern_alter_procedure, sql_info, re.I)
+        if alert_procedure_re:
+            procedure_alter_num += 1
+            procedure_name.append(alert_procedure_re.group().split()[2])
+    if procedure_create_num >= 2:
         error_msg.append("There is {num} create "
-                         "stored procedure.".format(num=proc_create_num))
-    if proc_create_num > 0 and proc_alter_num >=\
-            1 and len(set(proc_name)) != 1:
+                         "stored procedure.".format(num=procedure_create_num))
+    if procedure_create_num > 0 and procedure_alter_num >=\
+            1 and len(set(procedure_name)) != 1:
         error_msg.append("There are multiple alter or create "
                          "operations on the stored procedure,and "
                          "not the same stored procedure.")
 
 
-def checkTable(sql_info_lst, error_msg):
+def check_table(sql_info_lst, error_msg):
 
     ''' 检查是否只存在一个操作（create、alter、drop）表的逻辑'''
     pattern_create_table = r'\s*create\s+table\s+.*'
