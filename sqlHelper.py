@@ -6,7 +6,11 @@ import chardet
 import re
 import copy
 
+# from mssqlDataBase import MsSql
+
+
 db_name = ''
+
 excute_path = ['v2', 'dw', 'dwlog']  # 按目前规约只执行这三个目录下及其子目录下的脚本
 
 
@@ -81,7 +85,7 @@ def check_sql_info(sql_paths):
         error_msg = []
         # 脚本内容校验
         check_use(sql_info_lst, error_msg)
-        check_repeat(sql_info_lst, error_msg)
+        # check_repeat(sql_path, error_msg)
         check_db_name(sql_info_lst, error_msg)
         check_procedure(sql_info_lst,  error_msg)
         check_table(sql_info_lst, error_msg)
@@ -95,12 +99,11 @@ def check_sql_info(sql_paths):
             print('---------------------------------------------\n')
     if check_result:
         print("All scripts under path "
-              "'{path}' are approved and will "
-              "be executed.!!\n".format(path=sql_paths, num=fail_count))
+              "'{path}' are approved!!\n".format(path=sql_paths, num=fail_count))
     else:
         print("Path: '{path}' the script "
               "audit ends, total: {num} "
-              "a failure.!!\n".format(path=sql_paths, num=fail_count))
+              "a failure!!\n".format(path=sql_paths, num=fail_count))
     return check_result
 
 
@@ -124,33 +127,19 @@ def check_use(sql_info_lst, error_msg):
                 db_name = new_db_name
                 if db_name:
                     return
-    error_msg.append('The first four lines have no use statements.!!')
+    error_msg.append('The first four lines have no use statements!!')
 
 
-def check_repeat(sql_info_lst, error_msg):
-    pattern_create_procedure = r'[\s\S]*create\s+(procedure|proc)\s+[\s\S]*'
-    pattern_drop_procedure = r'[\s\S]*drop\s+(procedure|proc)\s+[\s\S]*'
-    pattern_create_table = r'[\s\S]*create\s+table\s+[\s\S]*'
-    pattern_drop_table = r'[\s\S]*drop\s+table\s+[\s\S]*'
-    pattern_create_column = r'[\s\S]*add\s+column\s+[\s\S]*'
-    pattern_drop_column = r'[\s\S]*drop\s+column\s+[\s\S]*'
-    pattern_create_type = r'[\s\S]*create\s+type\s+[\s\S]*'
-    pattern_drop_type = r'[\s\S]*drop\s+type\s+[\s\S]*'
-    sql_info = ' '.join(sql_info_lst)
-
-    msg = "The script does not support repeated execution, please modify.!!"
-    if re.match(pattern_create_procedure, sql_info, re.I) and not re.match(pattern_drop_procedure, sql_info, re.I):
-        error_msg.append(msg)
-        return
-    if re.match(pattern_create_table, sql_info, re.I) and not re.match(pattern_drop_table, sql_info, re.I):
-        error_msg.append(msg)
-        return
-    if re.match(pattern_create_column, sql_info, re.I) and not re.match(pattern_drop_column, sql_info, re.I):
-        error_msg.append(msg)
-        return
-    if re.match(pattern_create_type, sql_info, re.I) and not re.match(pattern_drop_type, sql_info, re.I):
-        error_msg.append(msg)
-        return
+# def check_repeat(sql_path, error_msg):
+#     ''' 检查脚本是否可重复执行 '''
+#     record = True
+#     for i in range(0, 2):
+#         ms = MsSql('local')
+#         exec_result = ms.exec_sql_file(sql_path)
+#         if exec_result:
+#             record = False
+#     if not record:
+#         error_msg.append('Script {sql_path} cannot be repeated, please modify!!'.format(sql_path=sql_path))
 
 
 def check_db_name(sql_info_lst, error_msg):
@@ -185,12 +174,12 @@ def check_procedure(sql_info_lst, error_msg):
             procedure_name.append(alert_procedure_re.group().split()[2])
     if procedure_create_num >= 2:
         error_msg.append("There is {num} create "
-                         "stored procedure.".format(num=procedure_create_num))
+                         "stored procedure!!".format(num=procedure_create_num))
     if procedure_create_num > 0 and procedure_alter_num >=\
             1 and len(set(procedure_name)) != 1:
         error_msg.append("There are multiple alter or create "
                          "operations on the stored procedure,and "
-                         "not the same stored procedure.")
+                         "not the same stored procedure!!")
 
 
 def check_table(sql_info_lst, error_msg):
@@ -250,4 +239,4 @@ def check_table(sql_info_lst, error_msg):
 
     if alter_table_num >= 2 and len(set(alter_table_name)) != 1:
         error_msg.append("There are multiple alter "
-                         "table operations, and not the same table.!!")
+                         "table operations, and not the same table!!")

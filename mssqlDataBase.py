@@ -79,7 +79,14 @@ class MsSql:
         finally:
             self.conn.close()
 
-    def exec_sql_file(self, sql_path):
+    def exec_sql_file(self,sql_path):
+        cmd = r"sqlcmd -S " + self.host + " -U " \
+              + self.user + " -P " + self.pwd + " -d " \
+              + self.db + " -i " + sql_path + ' -b '
+        exec_result = os.system(cmd)  # 0表示成功，1表示失败
+        return exec_result
+
+    def check_sql_file(self, sql_path):
 
         ''' 检查并执行脚本文件'''
         sql_path_lst = get_sql_paths(sql_path)
@@ -98,10 +105,7 @@ class MsSql:
                             if sql_path in lines:  # 当前脚本执行成功过不在执行
                                 continue
                         with open(log_path, 'a') as f:
-                            cmd = r"sqlcmd -S " + self.host + " -U "\
-                                  + self.user + " -P " + self.pwd + " -d " \
-                                  + self.db + " -i " + sql_path+' -b '
-                            exec_result = os.system(cmd)  # 0表示成功，1表示失败
+                            exec_result = self.exec_sql_file(sql_path)
                             if not exec_result:
                                 f.write(sql_path + '\n')  # 脚本执行成功记录日志
                             else:
@@ -110,6 +114,8 @@ class MsSql:
             else:
                 raise ValueError("The script for path '{path}'"
                                  " does not pass.".format(path=path_item))
+
+
 
 
 if __name__ == '__main__':
