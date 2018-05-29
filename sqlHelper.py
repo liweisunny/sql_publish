@@ -4,33 +4,31 @@
 import os
 import chardet
 import re
-import copy
-
-# from mssqlDataBase import MsSql
+from mssqlDataBase import MsSql
 
 
 db_name = ''
 
-excute_path = ['v2', 'dw', 'dwlog']  # 按目前规约只执行这三个目录下及其子目录下的脚本
+execute_path = ['v2', 'dw', 'dwlog']  # 按目前规约只执行这三个目录下及其子目录下的脚本
 
 
 def get_sql_paths(parent_path, path_lst=[], temp_lst=[]):
 
     ''' 获取当前目录下的所以包含脚本文件的子目录'''
-    global excute_path
+    global execute_path
     if not os.path.exists(parent_path):
         raise ValueError("Path:'{path}'does not "
                          "exist!!".format(path=parent_path))
     son_paths = [path for path in os.listdir(parent_path) if
                  os.path.isdir(os.path.join(parent_path, path))
-                 and (path.lower() in excute_path or not excute_path)]
+                 and (path.lower() in execute_path or not execute_path)]
     for path_item in son_paths:
         path = os.path.join(parent_path, path_item)
         files = [file for file in os.listdir(path) if file.endswith('.sql')]
         if not files:  # 判断当前目录下是否直接包含脚本文件
             temp_lst.append(path)
         path_lst.append(path)
-        excute_path = []
+        execute_path = []
         get_sql_paths(path, path_lst, temp_lst)
 
     path_lst = [item for item in path_lst
@@ -39,6 +37,38 @@ def get_sql_paths(parent_path, path_lst=[], temp_lst=[]):
     if files:  # 判断用户输入的顶级目录是否存在脚本文件
         path_lst.insert(0, parent_path)
     return path_lst
+
+
+def check_sql_to_execute(sql_path, server_mark):
+
+    ''' 检查并执行脚本文件'''
+    sql_path_lst = get_sql_paths(sql_path)
+    print(sql_path_lst)
+    for path_item in sql_path_lst:
+        check_result = check_sql_info(path_item)
+        if check_result:  # 当前路径下的脚本全部校验成功后开始执行脚本
+            if server_mark != 'check':
+                sql_lst = [file for file in
+                           os.listdir(path_item) if file.endswith('.sql')]
+                for sql_item in sql_lst:
+                    sql_path = os.path.join(path_item, sql_item).lower()
+                    log_path = os.path.join(os.path.dirname(__file__)
+                                            + '/executeLog', server_mark)  # server_mark 对应日志文件的名称
+                    with open(log_path, 'r') as f:
+                        lines = map(lambda line: line.strip('\n'), f)
+                        if sql_path in lines:  # 当前脚本执行成功过不在执行
+                            continue
+                    with open(log_path, 'a') as f:
+                        ms = MsSql(server_mark)
+                        exec_result = ms.exec_sql_file(sql_path)
+                        if not exec_result:
+                            f.write(sql_path + '\n')  # 脚本执行成功记录日志
+                        else:
+                            raise SystemError("'{sql}On failure'"
+                                              "".format(sql=sql_path))  # 脚本执行失败抛出异常
+        else:
+            raise ValueError("The script for path '{path}'"
+                             " does not pass.".format(path=path_item))
 
 
 def get_sql_info(sql_path):
@@ -130,16 +160,16 @@ def check_use(sql_info_lst, error_msg):
     error_msg.append('The first four lines have no use statements!!')
 
 
-# def check_repeat(sql_path, error_msg):
-#     ''' 检查脚本是否可重复执行 '''
-#     record = True
-#     for i in range(0, 2):
-#         ms = MsSql('local')
-#         exec_result = ms.exec_sql_file(sql_path)
-#         if exec_result:
-#             record = False
-#     if not record:
-#         error_msg.append('Script {sql_path} cannot be repeated, please modify!!'.format(sql_path=sql_path))
+def check_repeat(sql_path, error_msg):
+    ''' 检查脚本是否可重复执行 '''
+    record = True
+    for i in range(0, 2):
+        ms = MsSql('local')
+        exec_result = ms.exec_sql_file(sql_path)
+        if exec_result:
+            record = False
+    if not record:
+        error_msg.append('Script {sql_path} cannot be repeated, please modify!!'.format(sql_path=sql_path))
 
 
 def check_db_name(sql_info_lst, error_msg):

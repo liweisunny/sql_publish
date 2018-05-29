@@ -6,8 +6,6 @@ import pymssql
 import os
 import traceback
 import configparser
-from sqlHelper import get_sql_paths, check_sql_info
-
 
 class MsSql:
     '''
@@ -20,7 +18,6 @@ class MsSql:
 
     def __init__(self, server_mark):
         self.server_mark = server_mark
-        self.log_file = server_mark
         self.__init_db_info()
 
     def __init_db_info(self):
@@ -85,37 +82,6 @@ class MsSql:
               + self.db + " -i " + sql_path + ' -b '
         exec_result = os.system(cmd)  # 0表示成功，1表示失败
         return exec_result
-
-    def check_sql_file(self, sql_path):
-
-        ''' 检查并执行脚本文件'''
-        sql_path_lst = get_sql_paths(sql_path)
-        for path_item in sql_path_lst:
-            check_result = check_sql_info(path_item)
-            if check_result:  # 当前路径下的脚本全部校验成功后开始执行脚本
-                if self.server_mark != 'check':
-                    sql_lst = [file for file in
-                               os.listdir(path_item) if file.endswith('.sql')]
-                    for sql_item in sql_lst:
-                        sql_path = os.path.join(path_item, sql_item).lower()
-                        log_path = os.path.join(os.path.dirname(__file__)
-                                                + '/executeLog', self.log_file)
-                        with open(log_path, 'r') as f:
-                            lines = map(lambda line: line.strip('\n'), f)
-                            if sql_path in lines:  # 当前脚本执行成功过不在执行
-                                continue
-                        with open(log_path, 'a') as f:
-                            exec_result = self.exec_sql_file(sql_path)
-                            if not exec_result:
-                                f.write(sql_path + '\n')  # 脚本执行成功记录日志
-                            else:
-                                raise SystemError("'{sql}On failure'"
-                                                  "".format(sql=sql_path))  # 脚本执行失败抛出异常
-            else:
-                raise ValueError("The script for path '{path}'"
-                                 " does not pass.".format(path=path_item))
-
-
 
 
 if __name__ == '__main__':
