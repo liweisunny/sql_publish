@@ -115,7 +115,7 @@ def check_sql_info(sql_paths):
         error_msg = []
         # 脚本内容校验
         check_use(sql_info_lst, error_msg)
-        # check_repeat(sql_path, error_msg)
+        check_repeat(sql_path, error_msg)
         check_db_name(sql_info_lst, error_msg)
         check_procedure(sql_info_lst,  error_msg)
         check_table(sql_info_lst, error_msg)
@@ -164,7 +164,7 @@ def check_repeat(sql_path, error_msg):
     ''' 检查脚本是否可重复执行 '''
     record = True
     for i in range(0, 2):
-        ms = MsSql('local')
+        ms = MsSql('innerDev')
         exec_result = ms.exec_sql_file(sql_path)
         if exec_result:
             record = False

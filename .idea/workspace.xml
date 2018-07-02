@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7ba23a3b-0433-41c1-a20a-9960b7bff8e9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/sqlPublish.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/executeLog/innerDev" afterPath="$PROJECT_DIR$/executeLog/innerDev" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mssqlDataBase.py" afterPath="$PROJECT_DIR$/mssqlDataBase.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/dbConfig.config" afterPath="$PROJECT_DIR$/config/dbConfig.config" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sqlHelper.py" afterPath="$PROJECT_DIR$/sqlHelper.py" />
     </list>
     <ignored path="sql_publish.iws" />
@@ -43,55 +40,7 @@
     <favorites_list name="sql_publish" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="sqlHelper.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sqlHelper.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="49" column="38" selection-start-line="49" selection-start-column="38" selection-end-line="49" selection-end-column="38" />
-              <folding>
-                <element signature="e#56#65#0" expanded="true" />
-                <element signature="e#268#1288#0" expanded="false" />
-                <element signature="e#2860#3484#0" expanded="false" />
-                <element signature="e#3522#5155#0" expanded="false" />
-                <element signature="e#5202#5952#0" expanded="false" />
-                <element signature="e#5998#6316#0" expanded="false" />
-                <element signature="e#6367#6739#0" expanded="false" />
-                <element signature="e#6793#8006#0" expanded="false" />
-                <element signature="e#8056#10604#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
-              <folding>
-                <element signature="e#56#65#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mssqlDataBase.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mssqlDataBase.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="672">
-              <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
-              <folding>
-                <element signature="e#57#71#0" expanded="true" />
-                <marker date="1527590126149" expanded="true" signature="2469:2741" ph="UPDATE dbo.A... " />
-                <marker date="1527590126149" expanded="true" signature="2547:2739" ph="SELECT Analy... AnalysisReportChart" />
-                <marker date="1527590126149" expanded="true" signature="2633:2738" ph="SELECT Analy... DashboardDetail" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -118,15 +67,15 @@
         <option value="$PROJECT_DIR$/runLog/dbTest" />
         <option value="$PROJECT_DIR$/runLog/innerDev" />
         <option value="$PROJECT_DIR$/executeLog/test" />
-        <option value="$PROJECT_DIR$/config/dbConfig.config" />
         <option value="$PROJECT_DIR$/test3.py" />
         <option value="$PROJECT_DIR$/test2.py" />
         <option value="$PROJECT_DIR$/test1.py" />
         <option value="$PROJECT_DIR$/sqlPublish.py" />
         <option value="$PROJECT_DIR$/mssqlDataBase.py" />
-        <option value="$PROJECT_DIR$/sqlHelper.py" />
         <option value="$PROJECT_DIR$/executeLog/innerDev" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/config/dbConfig.config" />
+        <option value="$PROJECT_DIR$/sqlHelper.py" />
       </list>
     </option>
   </component>
@@ -137,10 +86,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-401" />
-    <option name="y" value="-1088" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -167,6 +116,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -195,28 +146,12 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="executeLog" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql_publish" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql_publish" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -581,27 +516,27 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-401" y="-1088" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="1" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2196162" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32526475" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286334" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39696312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3373102" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39696312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286334" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3373102" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -656,6 +591,11 @@
           <line>263</line>
           <option name="timeStamp" value="99" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sqlHelper.py</url>
+          <line>93</line>
+          <option name="timeStamp" value="102" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -664,7 +604,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="102" />
+      <option name="time" value="103" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -678,6 +618,29 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#56#65#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mssqlDataBase.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1445">
+          <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+          <folding>
+            <element signature="e#57#71#0" expanded="true" />
+            <marker date="1527590126149" expanded="true" signature="2469:2741" ph="UPDATE dbo.A... " />
+            <marker date="1527590126149" expanded="true" signature="2547:2739" ph="SELECT Analy... AnalysisReportChart" />
+            <marker date="1527590126149" expanded="true" signature="2633:2738" ph="SELECT Analy... DashboardDetail" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sqlHelper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="901">
@@ -685,13 +648,12 @@
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -710,13 +672,12 @@
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -735,13 +696,12 @@
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -767,13 +727,12 @@
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -800,13 +759,12 @@
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -833,13 +791,12 @@
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -858,13 +815,12 @@
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -964,7 +920,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -972,46 +927,54 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test3.py" />
+    <entry file="file://$PROJECT_DIR$/test2.py" />
+    <entry file="file://$PROJECT_DIR$/test1.py" />
+    <entry file="file://$PROJECT_DIR$/sqlHelper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding>
+            <element signature="e#56#65#0" expanded="true" />
+            <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
+            <element signature="e#2860#3484#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/executeLog/innerDev">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1224">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/executeLog/test">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/dbConfig.config">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="10" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test3.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-          <folding />
+        <state relative-caret-position="323">
+          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mssqlDataBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+        <state relative-caret-position="1241">
+          <caret line="73" column="33" selection-start-line="73" selection-start-column="33" selection-end-line="73" selection-end-column="33" />
           <folding>
             <element signature="e#57#71#0" expanded="true" />
             <marker date="1527590126149" expanded="true" signature="2469:2741" ph="UPDATE dbo.A... " />
@@ -1023,60 +986,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sqlHelper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+        <state relative-caret-position="442">
+          <caret line="117" column="8" selection-start-line="117" selection-start-column="8" selection-end-line="117" selection-end-column="8" />
           <folding>
             <element signature="e#56#65#0" expanded="true" />
             <element signature="e#268#1288#0" expanded="false" />
+            <element signature="e#1345#2825#0" expanded="false" />
             <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
+            <element signature="e#5200#5950#0" expanded="false" />
+            <element signature="e#6368#6740#0" expanded="false" />
+            <element signature="e#6794#8007#0" expanded="false" />
+            <element signature="e#8057#10605#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sqlHelper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="49" column="38" selection-start-line="49" selection-start-column="38" selection-end-line="49" selection-end-column="38" />
-          <folding>
-            <element signature="e#56#65#0" expanded="true" />
-            <element signature="e#268#1288#0" expanded="false" />
-            <element signature="e#2860#3484#0" expanded="false" />
-            <element signature="e#3522#5155#0" expanded="false" />
-            <element signature="e#5202#5952#0" expanded="false" />
-            <element signature="e#5998#6316#0" expanded="false" />
-            <element signature="e#6367#6739#0" expanded="false" />
-            <element signature="e#6793#8006#0" expanded="false" />
-            <element signature="e#8056#10604#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/executeLog/innerDev">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1224">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/executeLog/test">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
+        <state relative-caret-position="295">
+          <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
           <folding>
             <element signature="e#56#65#0" expanded="true" />
           </folding>
