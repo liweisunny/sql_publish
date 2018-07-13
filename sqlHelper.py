@@ -6,43 +6,12 @@ import chardet
 import re
 from mssqlDataBase import MsSql
 
-
 db_name = ''
 
-execute_path = ['v2', 'dw', 'dwlog']  # 按目前规约只执行这三个目录下及其子目录下的脚本
 
-
-def get_sql_paths(parent_path, path_lst=[], temp_lst=[]):
-
-    ''' 获取当前目录下的所以包含脚本文件的子目录'''
-    global execute_path
-    if not os.path.exists(parent_path):
-        raise ValueError("Path:'{path}'does not "
-                         "exist!!".format(path=parent_path))
-    son_paths = [path for path in os.listdir(parent_path) if
-                 os.path.isdir(os.path.join(parent_path, path))
-                 and (path.lower() in execute_path or not execute_path)]
-    for path_item in son_paths:
-        path = os.path.join(parent_path, path_item)
-        files = [file for file in os.listdir(path) if file.endswith('.sql')]
-        if not files:  # 判断当前目录下是否直接包含脚本文件
-            temp_lst.append(path)
-        path_lst.append(path)
-        execute_path = []
-        get_sql_paths(path, path_lst, temp_lst)
-
-    path_lst = [item for item in path_lst
-                if item not in temp_lst]  # 去除掉不包含脚本文件的目录
-    files = [file for file in os.listdir(parent_path) if file.endswith('.sql')]
-    if files:  # 判断用户输入的顶级目录是否存在脚本文件
-        path_lst.insert(0, parent_path)
-    return path_lst
-
-
-def check_sql_to_execute(sql_path, server_mark):
+def check_sql_to_execute(sql_path_lst, server_mark):
 
     ''' 检查并执行脚本文件'''
-    sql_path_lst = get_sql_paths(sql_path)
     print(sql_path_lst)
     for path_item in sql_path_lst:
         check_result = check_sql_info(path_item)
@@ -72,23 +41,27 @@ def check_sql_to_execute(sql_path, server_mark):
 
 
 def get_sql_info(sql_path):
-    ''' 读取脚本内容，并以列表的形式返回'''
-    with open(sql_path, 'rb')as f:
-        sql_content = f.read()
-        # 转码逻辑
-        code_style = chardet.detect(sql_content).get('encoding')
-        f.seek(0, os.SEEK_SET)
-        if code_style == 'UTF-16LE':
-            sql_content = sql_content.decode('utf16', 'ignore').encode('utf8')
-        else:
-            sql_content = sql_content.decode(code_style).encode('utf8')
-        # 处理换行符
-        sql_info = str(sql_content, encoding='utf-8')
-        if '\r\n' in sql_info:
-            sql_lst = sql_info.split('\r\n')
-        else:
-            sql_lst = sql_info.split('\n')
-    return sql_lst
+    try:
+        ''' 读取脚本内容，并以列表的形式返回'''
+        with open(sql_path, 'rb')as f:
+            sql_content = f.read()
+            # 转码逻辑
+            code_style = chardet.detect(sql_content).get('encoding')
+            f.seek(0, os.SEEK_SET)
+            if code_style == 'UTF-16LE':
+                sql_content = sql_content.decode('utf16', 'ignore').encode('utf8')
+            else:
+                sql_content = sql_content.decode(code_style).encode('utf8')
+            # 处理换行符
+            sql_info = str(sql_content, encoding='utf-8')
+            if '\r\n' in sql_info:
+                sql_lst = sql_info.split('\r\n')
+            else:
+                sql_lst = sql_info.split('\n')
+            return sql_lst
+    except UnicodeDecodeError:
+        print('Script file {sql_path} has coding problems, please modify!!'.format(sql_path=sql_path))
+        raise UnicodeDecodeError
 
 
 def check_sql_info(sql_paths):
@@ -162,14 +135,13 @@ def check_use(sql_info_lst, error_msg):
 
 def check_repeat(sql_path, error_msg):
     ''' 检查脚本是否可重复执行 '''
-    record = True
     for i in range(0, 2):
         ms = MsSql('innerDev')
         exec_result = ms.exec_sql_file(sql_path)
-        if exec_result:
-            record = False
-    if not record:
-        error_msg.append('Script {sql_path} cannot be repeated, please modify!!'.format(sql_path=sql_path))
+        if exec_result and i == 0:
+            error_msg.append('Script {sql_path} failed to execute during the validation phase. Please modify!!'.format(sql_path=sql_path))
+        if exec_result and i == 1:
+            error_msg.append('Script {sql_path} cannot be repeated, please modify!!'.format(sql_path=sql_path))
 
 
 def check_db_name(sql_info_lst, error_msg):
